@@ -161,37 +161,5 @@ def print_log_line(line: str) -> None:
     console.print(line, highlight=False, markup=False, soft_wrap=True)
 
 
-def render_dashboard(rows: list[Row]) -> None:
-    body = Table.grid(padding=(0, 3))
-    body.add_column(no_wrap=True)
-    body.add_column()
-
-    for r in rows:
-        right = _status(r.running)
-        if r.running:
-            right += Text(f"   {r.endpoint}", style="green")
-        body.add_row(Text(r.name, style="cyan"), right)
-
-    running = sum(1 for r in rows if r.running)
-
-    outer = Table.grid()
-    outer.add_column()
-    outer.add_row(body)
-    outer.add_row("")
-    outer.add_row(
-        Text("[Enter] start/stop   [l] logs   [r] refresh   [q] quit", style="dim")
-    )
-
-    console.print(
-        Panel(
-            outer,
-            title="[bold]eary-start-llama[/bold]",
-            subtitle=f"[dim]{len(rows)} models · {running} running[/dim]",
-            title_align="left",
-            border_style="cyan",
-        )
-    )
-
-
 def info(msg: str) -> None:
     console.print(f"[dim]{msg}[/dim]")

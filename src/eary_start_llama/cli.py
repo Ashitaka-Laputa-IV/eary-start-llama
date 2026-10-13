@@ -246,7 +246,13 @@ def main(argv=None) -> None:
     _prepare()
 
     if not getattr(args, "command", None):
-        ui.render_dashboard(_rows())
+        # 交互终端进 TUI；被管道/重定向时退化为一次性列表
+        if sys.stdout.isatty():
+            from .tui import run as run_tui
+
+            run_tui()
+        else:
+            ui.render_list(_rows())
         return
 
     args.func(args)
