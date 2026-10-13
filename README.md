@@ -19,6 +19,8 @@ uv sync
 uv run eary-start-llama        # 无参数 → 进入交互界面
 ```
 
+![交互界面](./image.png)
+
 | 按键 | 作用 |
 | --- | --- |
 | ↑ / ↓ | 选择模型 |
