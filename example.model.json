@@ -1,0 +1,35 @@
+{
+  "//": [
+    "示例清单（不会被程序自动读取）。把它复制成 models.json 后按需修改即可。",
+    "清单查找顺序：$ESL_CONFIG  >  <项目根>/models.json  >  ~/.config/eary-start-llama/models.json",
+    "字段说明：",
+    "  source（必填）= HF 仓库 'user/model[:quant]'，或本地 .gguf 的绝对路径",
+    "  args  （可选）= 额外拼到 `llama serve` 后面的参数，如 --embeddings、--rerank、-c 8192",
+    "  port  （可选）= 固定端口；省略则从 9931 起自动找空位",
+    "注意：以 // 开头的键只是注释，程序会忽略；但用 `add`/`rm` 改写 models.json 时会被丢弃。"
+  ],
+  "models": {
+    "bge-m3": {
+      "//": "嵌入模型：必须带 --embeddings 才会提供 /v1/embeddings",
+      "source": "ggml-org/bge-m3-Q8_0-GGUF:Q8_0",
+      "args": "--embeddings",
+      "port": 9931
+    },
+    "bge-reranker": {
+      "//": "重排模型：必须带 --rerank 才会提供 /v1/rerank",
+      "source": "smarttasks/bge-reranker-v2-m3-GGUF:Q8_0",
+      "args": "--rerank",
+      "port": 9932
+    },
+    "qwen3-4b": {
+      "//": "聊天模型：args 可省略；省略 port 则由程序自动分配",
+      "source": "mradermacher/Qwen3-4B-EN-SynthDolly-3B-GGUF:Q4_K_M"
+    },
+    "local-gguf": {
+      "//": "本地文件：source 直接写 .gguf 绝对路径（不依赖 HF 缓存）",
+      "source": "/path/to/your/model.gguf",
+      "args": "-c 8192 -t 8",
+      "port": 9940
+    }
+  }
+}
