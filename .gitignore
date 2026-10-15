@@ -6,6 +6,10 @@ __pycache__/
 # uv / 虚拟环境
 .venv/
 
+# 构建产物
+dist/
+build/
+
 # 编辑器
 .idea/
 .vscode/

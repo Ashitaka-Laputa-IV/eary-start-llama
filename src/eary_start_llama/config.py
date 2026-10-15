@@ -21,7 +21,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-# src/eary_start_llama/config.py -> 上两级即项目根
+# src/eary_start_llama/config.py -> 上两级即项目根（源码运行时）
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_CONFIG = PROJECT_ROOT / "models.json"
 GLOBAL_CONFIG = (
@@ -29,6 +29,10 @@ GLOBAL_CONFIG = (
     / "eary-start-llama"
     / "models.json"
 )
+
+# 是否运行在源码树中（开发模式）。pip / uv 安装进 site-packages 后，
+# PROJECT_ROOT 会落到虚拟环境内部，不能再用它。
+_IN_SOURCE_TREE = (PROJECT_ROOT / "pyproject.toml").is_file()
 
 
 def _resolve_config() -> Path:
@@ -39,7 +43,8 @@ def _resolve_config() -> Path:
         return PROJECT_CONFIG
     if GLOBAL_CONFIG.exists():
         return GLOBAL_CONFIG
-    return PROJECT_CONFIG
+    # 都不存在：源码开发写项目根方便版本管理，安装版写全局配置目录
+    return PROJECT_CONFIG if _IN_SOURCE_TREE else GLOBAL_CONFIG
 
 
 CONFIG_FILE = _resolve_config()

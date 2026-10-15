@@ -9,7 +9,7 @@
 需要 Python >= 3.13、[uv](https://github.com/astral-sh/uv)，以及带 `serve` 的 `llama` 命令。
 
 ```bash
-git clone <this-repo> && cd eary-start-llama
+git clone https://github.com/Ashitaka-Laputa-IV/eary-start-llama.git && cd eary-start-llama
 uv sync
 ```
 
@@ -19,7 +19,7 @@ uv sync
 uv run eary-start-llama        # 无参数 → 进入交互界面
 ```
 
-![交互界面](./image.png)
+![交互界面](https://raw.githubusercontent.com/Ashitaka-Laputa-IV/eary-start-llama/main/image.png)
 
 | 按键 | 作用 |
 | --- | --- |

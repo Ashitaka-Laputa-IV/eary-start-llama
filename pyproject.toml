@@ -1,16 +1,33 @@
 [project]
 name = "eary-start-llama"
 version = "0.1.0"
-description = "Add your description here"
+description = "Manage local llama.cpp model servers with a JSON manifest and an interactive TUI."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     { name = "Ashitaka-Laputa-IV", email = "Ashitaka-Laputa-IV@outlook.com" }
 ]
 requires-python = ">=3.13"
+keywords = ["llama.cpp", "gguf", "llm", "cli", "tui"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Utilities",
+]
 dependencies = [
     "rich>=15.0.0",
     "textual>=8.2.8",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Ashitaka-Laputa-IV/eary-start-llama"
+Repository = "https://github.com/Ashitaka-Laputa-IV/eary-start-llama"
+Issues = "https://github.com/Ashitaka-Laputa-IV/eary-start-llama/issues"
 
 [project.scripts]
 eary-start-llama = "eary_start_llama:main"
