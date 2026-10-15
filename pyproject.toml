@@ -36,3 +36,16 @@ eary-start-llama = "eary_start_llama:main"
 [build-system]
 requires = ["uv_build>=0.12.23,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.0",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# 只拦真实错误（语法错误、未定义名、未使用导入等），不做风格苛求
+select = ["E4", "E7", "E9", "F"]
