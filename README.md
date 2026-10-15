@@ -44,7 +44,7 @@ esl log bge-m3 -f
 
 ## 配置
 
-声明要管哪些模型，写在项目根 `models.json`（完整示例见 [`example.model.json`](./example.model.json)）：
+声明要管哪些模型，写在项目根 `models.json`（完整示例见 [`example.model.json`](https://github.com/Ashitaka-Laputa-IV/eary-start-llama/blob/main/example.model.json)）：
 
 ```json
 {

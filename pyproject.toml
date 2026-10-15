@@ -1,6 +1,6 @@
 [project]
 name = "eary-start-llama"
-version = "0.1.0"
+version = "0.1.1"
 description = "Manage local llama.cpp model servers with a JSON manifest and an interactive TUI."
 readme = "README.md"
 license = "MIT"
