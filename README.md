@@ -9,14 +9,17 @@
 需要 Python >= 3.13、[uv](https://github.com/astral-sh/uv)，以及带 `serve` 的 `llama` 命令。
 
 ```bash
-git clone https://github.com/Ashitaka-Laputa-IV/eary-start-llama.git && cd eary-start-llama
-uv sync
+pip install eary-start-llama
 ```
+
+安装后提供两个等价命令：**`esl`**（短）与 `eary-start-llama`（完整），下文用 `esl`。
+
+在源码目录里开发则改用 `uv sync`，并把下文的 `esl` 换成 `uv run esl`。
 
 ## 使用
 
 ```bash
-uv run eary-start-llama        # 无参数 → 进入交互界面
+esl            # 无参数 → 进入交互界面
 ```
 
 ![交互界面](https://raw.githubusercontent.com/Ashitaka-Laputa-IV/eary-start-llama/main/image.png)
@@ -31,13 +34,13 @@ uv run eary-start-llama        # 无参数 → 进入交互界面
 也可以直接用子命令（适合脚本）：
 
 ```bash
-uv run eary-start-llama list
-uv run eary-start-llama start bge-m3
-uv run eary-start-llama stop --all
-uv run eary-start-llama log bge-m3 -f
+esl list
+esl start bge-m3
+esl stop --all
+esl log bge-m3 -f
 ```
 
-可用命令：`list` `status` `start` `stop` `log` `add` `rm` `init`，详见 `uv run eary-start-llama -h`。
+可用命令：`list` `status` `start` `stop` `log` `add` `rm` `init`，详见 `esl -h`。
 
 ## 配置
 

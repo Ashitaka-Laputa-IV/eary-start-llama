@@ -30,6 +30,7 @@ Repository = "https://github.com/Ashitaka-Laputa-IV/eary-start-llama"
 Issues = "https://github.com/Ashitaka-Laputa-IV/eary-start-llama/issues"
 
 [project.scripts]
+esl = "eary_start_llama:main"
 eary-start-llama = "eary_start_llama:main"
 
 [build-system]

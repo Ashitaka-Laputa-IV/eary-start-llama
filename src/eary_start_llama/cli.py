@@ -189,7 +189,7 @@ def cmd_init(args) -> None:
 # --------------------------------------------------------------------------- #
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="eary-start-llama",
+        # 不写死 prog，让它跟随实际命令名（esl / eary-start-llama）
         description="用 py-cli + json 管理 llama 模型服务",
     )
     parser.add_argument(
