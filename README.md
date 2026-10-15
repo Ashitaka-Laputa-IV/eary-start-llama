@@ -1,20 +1,39 @@
 # eary-start-llama
 
+[![PyPI](https://img.shields.io/pypi/v/eary-start-llama)](https://pypi.org/project/eary-start-llama/)
+[![Python](https://img.shields.io/pypi/pyversions/eary-start-llama)](https://pypi.org/project/eary-start-llama/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/Ashitaka-Laputa-IV/eary-start-llama/blob/main/LICENSE)
+
 用 `py-cli` + `json` 管理本机 [llama.cpp](https://github.com/ggml-org/llama.cpp) 模型服务：一份清单 + 一个交互界面，把 `llama serve` 的启动、停止、日志变成顺手操作。
 
 它不参与推理，只是 `llama serve` 之上的一层编排。
 
 ## 安装
 
-需要 Python >= 3.13、[uv](https://github.com/astral-sh/uv)，以及带 `serve` 的 `llama` 命令。
+需要 Python >= 3.13，以及带 `serve` 的 `llama` 命令。
+
+推荐用 [uv](https://github.com/astral-sh/uv) 或 [pipx](https://pipx.pypa.io/) 从 [PyPI](https://pypi.org/project/eary-start-llama/) 安装 —— 它们会为工具创建隔离环境并放进 PATH，不受系统 Python 的 PEP 668 限制：
+
+```bash
+uv tool install eary-start-llama
+# 或
+pipx install eary-start-llama
+```
+
+虚拟环境 / 项目内也可以用 `pip`：
 
 ```bash
 pip install eary-start-llama
 ```
 
-安装后提供两个等价命令：**`esl`**（短）与 `eary-start-llama`（完整），下文用 `esl`。
+源码开发：
 
-在源码目录里开发则改用 `uv sync`，并把下文的 `esl` 换成 `uv run esl`。
+```bash
+git clone https://github.com/Ashitaka-Laputa-IV/eary-start-llama.git && cd eary-start-llama
+uv sync
+```
+
+安装后提供两个等价命令：**`esl`**（短）与 `eary-start-llama`（完整），下文用 `esl`。源码开发时把下文的 `esl` 换成 `uv run esl`。
 
 ## 使用
 
