@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from . import config, engine, state, ui
 
@@ -31,7 +32,8 @@ def _prepare() -> None:
 
 def _rows(only: str | None = None) -> list[ui.Row]:
     models = config.load()
-    runtimes = state.live()
+    # 先与真实进程对齐，保证 list/status 显示的是事实（而不是过期的 state.json）
+    runtimes = engine.reconcile(models) if models else {}
     rows: list[ui.Row] = []
     for name, model in models.items():
         if only and name != only:
@@ -60,6 +62,10 @@ def cmd_list(args) -> None:
     ui.render_list(_rows())
 
 
+def cmd_sync(args) -> None:
+    ui.render_status(_rows())
+
+
 def cmd_status(args) -> None:
     rows = _rows(only=args.name)
     if args.name and not rows:
@@ -68,32 +74,71 @@ def cmd_status(args) -> None:
     ui.render_status(rows)
 
 
+def _start_many(models, port, timeout):
+    """并发启动多个模型，返回 {name: (ok, Runtime|StartError)}。"""
+    results = {}
+    with ui.console.status(
+        f"[cyan]并行启动 {len(models)} 个模型...", spinner="dots"
+    ):
+        with ThreadPoolExecutor(max_workers=min(len(models), 4)) as pool:
+            futures = {
+                pool.submit(engine.start, m, port=port, timeout=timeout): m
+                for m in models
+            }
+            for future in as_completed(futures):
+                model = futures[future]
+                try:
+                    results[model.name] = (True, future.result())
+                except engine.StartError as exc:
+                    results[model.name] = (False, exc)
+    return results
+
+
 def cmd_start(args) -> None:
     models = config.load()
-    model = models.get(args.name)
-    if model is None:
-        ui.render_error(f"unknown model: {args.name}")
+
+    if args.all:
+        names = list(models)
+    elif args.name:
+        names = args.name
+    else:
+        ui.render_error("请指定模型名，或使用 --all")
         sys.exit(1)
 
-    running = state.live().get(args.name)
-    if running is not None:
-        ui.console.print(
-            f"[yellow]![/yellow] {args.name} 已在运行 → {running.endpoint}"
-        )
+    missing = [n for n in names if n not in models]
+    if missing:
+        ui.render_error(f"unknown model: {', '.join(missing)}")
+        sys.exit(1)
+
+    running = state.live()
+    for name in names:
+        if name in running:
+            ui.console.print(
+                f"[yellow]![/yellow] {name} 已在运行 → {running[name].endpoint}"
+            )
+
+    pending = [models[n] for n in names if n not in running]
+    if not pending:
         return
 
-    try:
-        with ui.console.status(
-            f"[cyan]launching llama serve for [bold]{args.name}[/bold]...",
-            spinner="dots",
-        ):
-            rt = engine.start(model, port=args.port, timeout=args.timeout)
-    except engine.StartError as exc:
-        ui.render_error(str(exc))
-        ui.render_failure(args.name, exc.tail)
+    if len(pending) > 1 and args.port is not None:
+        ui.render_error("多模型启动时不能统一指定 --port，请在清单里为每个模型配置端口")
         sys.exit(1)
 
-    ui.render_started(rt, model)
+    results = _start_many(pending, args.port, args.timeout)
+
+    failed = 0
+    for model in pending:
+        ok, value = results[model.name]
+        if ok:
+            ui.render_started(value, model)
+        else:
+            failed += 1
+            ui.render_error(f"{model.name} 启动失败")
+            ui.render_failure(model.name, value.tail)
+
+    if failed:
+        sys.exit(1)
 
 
 def cmd_stop(args) -> None:
@@ -200,13 +245,17 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("list", aliases=["ls"], help="列出模型台账")
     p.set_defaults(func=cmd_list)
 
+    p = sub.add_parser("sync", help="扫描运行中的 llama 进程并对齐状态")
+    p.set_defaults(func=cmd_sync)
+
     p = sub.add_parser("status", aliases=["st"], help="查看运行状态")
     p.add_argument("name", nargs="?", help="只查看某个模型")
     p.set_defaults(func=cmd_status)
 
-    p = sub.add_parser("start", help="启动模型服务")
-    p.add_argument("name", help="模型短名")
-    p.add_argument("--port", type=int, help="指定端口（默认从 9931 起自动分配）")
+    p = sub.add_parser("start", help="启动模型服务（可一次并行启动多个）")
+    p.add_argument("name", nargs="*", help="模型短名，可给多个")
+    p.add_argument("--all", action="store_true", help="启动清单里的全部模型")
+    p.add_argument("--port", type=int, help="指定端口（仅单模型时可用）")
     p.add_argument(
         "--timeout", type=float, default=180.0, help="等待就绪的秒数（默认 180）"
     )

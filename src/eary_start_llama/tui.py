@@ -94,8 +94,15 @@ class EslApp(App):
         table = self.query_one(DataTable)
         table.add_columns("Name", "Quant", "Size", "Status", "Endpoint", "PID")
         table.focus()
+        self._sync()
         self._reload()
         self.set_interval(2.0, self._reload)
+
+    def _sync(self) -> None:
+        """与真实 llama 进程对齐一次（进入界面/手动刷新时）。"""
+        models = config.load()
+        if models:
+            engine.reconcile(models)
 
     # ------------------------------------------------------------------ #
     # 渲染
@@ -145,6 +152,7 @@ class EslApp(App):
     # 操作
     # ------------------------------------------------------------------ #
     def action_refresh(self) -> None:
+        self._sync()
         self._reload()
         self.notify("已刷新")
 

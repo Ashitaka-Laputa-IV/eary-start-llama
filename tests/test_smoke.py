@@ -19,7 +19,7 @@ def test_has_main() -> None:
 def test_parser_accepts_subcommands() -> None:
     parser = build_parser()
     assert parser.parse_args(["list"]).command == "list"
-    assert parser.parse_args(["start", "bge-m3"]).name == "bge-m3"
+    assert parser.parse_args(["start", "bge-m3"]).name == ["bge-m3"]
 
 
 def test_config_file_name() -> None:
