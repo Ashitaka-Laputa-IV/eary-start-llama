@@ -2,21 +2,33 @@
   "models": {
     "bge-m3": {
       "source": "ggml-org/bge-m3-Q8_0-GGUF:Q8_0",
-      "args": "--embeddings",
+      "args": "--embeddings --pooling cls -c 8192 -b 4096 -ub 4096",
       "port": 9931
     },
     "bge-reranker": {
       "source": "smarttasks/bge-reranker-v2-m3-GGUF:Q8_0",
-      "args": "--rerank",
+      "args": "--rerank -c 8192 -b 4096 -ub 4096",
       "port": 9932
     },
     "lfm2.5-1.2b": {
       "source": "LiquidAI/LFM2.5-1.2B-Instruct-GGUF:Q6_K",
       "port": 9933
     },
+    "lfm2.5-2.6b": {
+      "source": "LiquidAI/LFM2.5-2.6B-GGUF:Q6_K",
+      "port": 9936
+    },
     "qwen3-4b": {
       "source": "mradermacher/Qwen3-4B-EN-SynthDolly-3B-GGUF:Q4_K_M",
       "port": 9934
+    },
+    "decider-2b": {
+      "source": "Mapika/decider-2b-GGUF:Q4_K_M",
+      "port": 9935
+    },
+    "d3-nano": {
+      "source": "ggml-org/vllm-d3-nano-GGUF:Q8_0",
+      "port": 9937
     }
   }
 }
